@@ -1,8 +1,7 @@
 package com.estudos.orders.resources;
 
-import com.estudos.orders.entities.User;
-import com.estudos.orders.repositories.UserRepository;
-import com.estudos.orders.services.UserService;
+import com.estudos.orders.entities.Order;
+import com.estudos.orders.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,19 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/users")
-public class UserResource {
+@RequestMapping(value = "/order")
+public class OrderResource {
 
     @Autowired
-    private UserService userService;
+    private OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll(){
-        return ResponseEntity.ok().body(userService.findAll());
+    public ResponseEntity<List<Order>> findAll(){
+        List<Order> orders = orderService.findAll();
+        return ResponseEntity.ok().body(orders);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findId(@PathVariable Long id){
-        return ResponseEntity.ok().body(userService.findId(id));
+    public ResponseEntity<Order> findById(@PathVariable Long id){
+        Order order = orderService.findId(id);
+        return ResponseEntity.ok().body(order);
     }
 }
