@@ -1,14 +1,8 @@
 package com.estudos.orders.config;
 
-import com.estudos.orders.entities.Category;
+import com.estudos.orders.entities.*;
 import com.estudos.orders.entities.Enuns.OrderStatus;
-import com.estudos.orders.entities.Order;
-import com.estudos.orders.entities.Product;
-import com.estudos.orders.entities.User;
-import com.estudos.orders.repositories.CategoryRepository;
-import com.estudos.orders.repositories.OrderRepository;
-import com.estudos.orders.repositories.ProductRepository;
-import com.estudos.orders.repositories.UserRepository;
+import com.estudos.orders.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +27,9 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
     @Override
     public void run(String... args) throws Exception {
         User user = new User(null, "Guilherme", "guilherme@gmail.com", "122333", "12345");
@@ -48,6 +45,9 @@ public class TestConfig implements CommandLineRunner {
         Product product = new Product(null, "Televisão", "bom demmias", 200.0, "defe");
         Product product1 = new Product(null, "celular", "bom demmias", 200.0, "defe");
 
+        OrderItem oi1 = new OrderItem(order, product, 2, product1.getPrice());
+        OrderItem oi2 = new OrderItem(order1, product1, 1, product1.getPrice());
+
         userRepository.saveAll(Arrays.asList(user,user1));
         orderRepository.saveAll(Arrays.asList(order, order1, order2));
         categoryRepository.saveAll(Arrays.asList(category, category2));
@@ -57,6 +57,12 @@ public class TestConfig implements CommandLineRunner {
         product.getCategories().add(category2);
         product1.getCategories().add(category);
 
+
         productRepository.saveAll(Arrays.asList(product, product1));
+        orderItemRepository.saveAll(Arrays.asList(oi1, oi2));
+
+        Payment payment = new Payment(null, Instant.parse("2025-05-20T21:20:00Z"), order1);
+        order1.setPayment(payment);
+        orderRepository.save(order1);
     }
 }
